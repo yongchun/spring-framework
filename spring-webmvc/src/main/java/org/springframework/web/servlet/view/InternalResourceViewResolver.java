@@ -30,7 +30,7 @@ import org.springframework.util.ClassUtils;
  *
  * <p>BTW, it's good practice to put JSP files that just serve as views under
  * WEB-INF, to hide them from direct access (e.g. via a manually entered URL).
- * Only controllers will be able to access them then.
+ * Only controllers will be able to access them then.最佳实现是把jsp文件放到WEB-INF下
  *
  * <p><b>Note:</b> When chaining ViewResolvers, an InternalResourceViewResolver
  * always needs to be last, as it will attempt to resolve any view name,
@@ -45,10 +45,16 @@ import org.springframework.util.ClassUtils;
  * @see InternalResourceView
  * @see JstlView
  */
+/**
+ * InternalResourceViewResolver为UrlBasedViewResolver的子类，<br/>
+ * 它将InternalResourceView作为缺省的View类，<br/>
+ * 如果当前classpath中有jstl的jar包时则使用JstlView作为缺省的view来渲染结果,见其构造方法<br/>
+ *
+ * */
 public class InternalResourceViewResolver extends UrlBasedViewResolver {
 
 	private static final boolean jstlPresent = ClassUtils.isPresent(
-			"javax.servlet.jsp.jstl.core.Config", InternalResourceViewResolver.class.getClassLoader());
+			"javax.servlet.jsp.jstl.core.Config", InternalResourceViewResolver.class.getClassLoader()); //参看jstl的jar包是否存在
 
 	private Boolean alwaysInclude;
 

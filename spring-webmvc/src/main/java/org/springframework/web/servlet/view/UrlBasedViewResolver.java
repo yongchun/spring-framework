@@ -384,10 +384,19 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	protected View createView(String viewName, Locale locale) throws Exception {
 		// If this resolver is not supposed to handle the given view,
 		// return null to pass on to the next resolver in the chain.
+        /**
+         * viewClass在springMvc的配置文件可以配置多个，这多个相当与一个chain，可以使用order指定顺序
+         * */
 		if (!canHandle(viewName, locale)) {
 			return null;
 		}
 		// Check for special "redirect:" prefix.
+        /**
+         * 例如结果返回的viewName为helloworld，则对应的实际jsp为/WEB-INF/jsp/helloworld.jsp<br/>
+         * 当返回的viewName的前缀为forward：时，spring mvc将结果通过forward的方式转到对应的视图，例如forward:helloworld。
+         * 这也是spring mvc缺省的使用模式。<br/>
+         * 当返回的viewName的前缀为redirect：时，spring mvc将结果通过redirect的方式转到对应的视图。例如redirect:helloworld<br/>
+         * */
 		if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
 			String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
 			RedirectView view = new RedirectView(redirectUrl, isRedirectContextRelative(), isRedirectHttp10Compatible());
@@ -458,8 +467,8 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * @see #loadView(String, java.util.Locale)
 	 */
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
-		AbstractUrlBasedView view = (AbstractUrlBasedView) BeanUtils.instantiateClass(getViewClass());
-		view.setUrl(getPrefix() + viewName + getSuffix());
+		AbstractUrlBasedView view = (AbstractUrlBasedView) BeanUtils.instantiateClass(getViewClass());//使用反射实例化viewClass
+		view.setUrl(getPrefix() + viewName + getSuffix()); //拼接view对象的url
 		String contentType = getContentType();
 		if (contentType != null) {
 			view.setContentType(contentType);

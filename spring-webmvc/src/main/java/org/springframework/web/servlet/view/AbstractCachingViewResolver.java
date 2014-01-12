@@ -71,7 +71,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	private final Map<Object, View> viewCreationCache =
 			new LinkedHashMap<Object, View>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
 				@Override
-				protected boolean removeEldestEntry(Map.Entry<Object, View> eldest) {
+				protected boolean removeEldestEntry(Map.Entry<Object, View> eldest) { //重载该方法，使用LinkedHashMap实现FIFO缓存策略
 					if (size() > getCacheLimit()) {
 						viewAccessCache.remove(eldest.getKey());
 						return true;
@@ -140,6 +140,10 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	}
 
 
+
+    /**
+     * resolveViewName抽象类实现
+     * */
 	@Override
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
 		if (!isCache()) {
@@ -149,7 +153,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 			Object cacheKey = getCacheKey(viewName, locale);
 			View view = this.viewAccessCache.get(cacheKey);
 			if (view == null) {
-				synchronized (this.viewCreationCache) {
+				synchronized (this.viewCreationCache) {//viewCreationCache枷锁
 					view = this.viewCreationCache.get(cacheKey);
 					if (view == null) {
 						// Ask the subclass to create the View object.
