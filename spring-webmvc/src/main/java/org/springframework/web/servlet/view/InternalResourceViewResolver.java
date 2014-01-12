@@ -45,10 +45,16 @@ import org.springframework.util.ClassUtils;
  * @see InternalResourceView
  * @see JstlView
  */
+/**
+ * InternalResourceViewResolver为UrlBasedViewResolver的子类，<br/>
+ * 它将InternalResourceView作为缺省的View类，<br/>
+ * 如果当前classpath中有jstl的jar包时则使用JstlView作为缺省的view来渲染结果,见其构造方法<br/>
+ *
+ * */
 public class InternalResourceViewResolver extends UrlBasedViewResolver {
 
 	private static final boolean jstlPresent = ClassUtils.isPresent(
-			"javax.servlet.jsp.jstl.core.Config", InternalResourceViewResolver.class.getClassLoader());
+			"javax.servlet.jsp.jstl.core.Config", InternalResourceViewResolver.class.getClassLoader()); //参看jstl的jar包是否存在
 
 	private Boolean alwaysInclude;
 

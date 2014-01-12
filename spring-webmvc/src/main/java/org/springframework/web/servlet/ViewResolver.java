@@ -33,6 +33,9 @@ import java.util.Locale;
  * @see org.springframework.web.servlet.view.ResourceBundleViewResolver
  * @see org.springframework.web.servlet.view.XmlViewResolver
  */
+/**
+ * springMvc使用ViewResolver根据controller中返回的view名关联到具体的View对象
+ * */
 public interface ViewResolver {
 
 	/**
